@@ -93,7 +93,7 @@ trait PageLoading {
 
 // A handy hook for steps that are valid on any page
 object CurrentPage extends Page {
-  def hasErrors: Boolean = elementDisplayed(By.id("errors"))
+  def hasErrors: Boolean = elementDisplayed(By.className("error-message"))
 
   def hasAlert: Boolean = elementDisplayed(By.className("alert"))
 

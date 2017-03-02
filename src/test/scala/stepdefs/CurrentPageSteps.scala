@@ -25,7 +25,9 @@ import org.scalatest.Matchers
 import pages.CurrentPage
 
 class CurrentPageSteps extends ScalaDsl with EN with Matchers with StartUpTearDown {
+
   import collection.JavaConversions._
+
   implicit val driver = CurrentPage.webDriver
   var suppliedValues: Map[String, String] = Map()
 
@@ -49,6 +51,16 @@ class CurrentPageSteps extends ScalaDsl with EN with Matchers with StartUpTearDo
     }
   }
 
+  Given("""^I set the date field (.+) to (.+)$""") { (name: String, v: String) =>
+    CurrentPage.setDateField(name, df.parseLocalDate(v))
+  }
+
+  Then("""^the value of (.+) should be (.+)$""") { (fieldId: String, expectedValue: String) =>
+    CurrentPage.IdQuery(fieldId).webElement.getText shouldBe expectedValue
+  }
+
+  Then("""^(.+) should not be present""") { fieldId: String => CurrentPage.IdQuery(fieldId).findElement shouldBe None }
+
   Given("""^I clear field (.+)$""") { fieldName: String => CurrentPage.textField(fieldName).clear() }
 
   Given("""^I set field (.+) to '(.*)'$""") { (name: String, value: String) => CurrentPage.textField(name).value = value }
@@ -65,14 +77,14 @@ class CurrentPageSteps extends ScalaDsl with EN with Matchers with StartUpTearDo
     }
   }
 
-  Given("""^I click on the '(.+)' link$"""){ linkText :String=>
+  Given("""^I click on the '(.+)' link$""") { linkText: String =>
     driver.findElements(By.tagName("a")).find(_.getText == linkText) match {
       case None => fail(s"Could not find a link with text $linkText")
       case Some(e) => e.click()
     }
   }
 
-  Then("""^I should see an alert with the text '(.+)'""") { expectedText:String =>
+  Then("""^I should see an alert with the text '(.+)'""") { expectedText: String =>
     val p = driver.findElement(By.className("alert")).findElement(By.tagName("p"))
     p.getText shouldBe expectedText
   }
