@@ -4,8 +4,9 @@ import java.text.SimpleDateFormat
 import java.util.{Calendar, TimeZone}
 
 import config.{Configuration, Environment}
-import driver.{Driver, FixedDelay}
 import driver.exceptions.{Server500ResponseException, Server502ResponseException}
+import driver.{Driver, FixedDelay}
+import org.joda.time.LocalDate
 import org.openqa.selenium.{By, NoSuchElementException, WebDriver}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.selenium
@@ -78,6 +79,12 @@ object CurrentPage extends Page {
   def hasErrors: Boolean = elementDisplayed(By.id("errors"))
 
   def hasAlert: Boolean = elementDisplayed(By.className("alert"))
+
+  def setDateField(name: String, d: LocalDate) = {
+    numberField(s"$name.day").value = d.getDayOfMonth.toString
+    numberField(s"$name.month").value = d.getMonthOfYear.toString
+    numberField(s"$name.year").value = d.getYear.toString
+  }
 }
 
 trait Page extends selenium.WebBrowser with Eventually {

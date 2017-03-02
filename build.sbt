@@ -16,6 +16,9 @@ enablePlugins(GitBranchPrompt)
 val seleniumVersion = "2.47.1"
 
 libraryDependencies ++= Seq(
+  "joda-time" % "joda-time" % "2.9.7",
+  "org.joda" % "joda-convert" % "1.8.1",
+  "com.github.nscala-time" %% "nscala-time" % "2.16.0",
   "com.typesafe.slick" %% "slick" % "3.1.1",
   "org.postgresql" % "postgresql" % "9.4.1207.jre6",
   "com.codeborne" % "phantomjsdriver" % "1.2.1",
