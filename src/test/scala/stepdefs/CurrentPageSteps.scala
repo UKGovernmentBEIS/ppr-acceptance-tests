@@ -65,6 +65,8 @@ class CurrentPageSteps extends ScalaDsl with EN with Matchers with StartUpTearDo
 
   Given("""^I set field (.+) to '(.*)'$""") { (name: String, value: String) => CurrentPage.textField(name).value = value }
 
+  Given("""^I set the number field (.+) to '(.*)'$""") { (name: String, value: String) => CurrentPage.numberField(name).value = value }
+
   Given("""^I set password (.+) to '(.*)'$""") { (name: String, value: String) => CurrentPage.pwdField(name).value = value }
 
   Given("""^I set dropdown (.+) to '(.*)'$""") { (name: String, value: String) => CurrentPage.singleSel(name).value = value }

@@ -27,6 +27,7 @@ object Configuration {
       case "dev" => Environment.Dev
       case "local" => Environment.Local
       case "acceptance" => Environment.Acceptance
+      case "live" => Environment.Live
       case _ => throw new IllegalArgumentException(s"Environment '$environmentProperty' not known")
     }
   }
@@ -54,6 +55,12 @@ object Configuration {
           PAGE_TIMEOUT_SECS = 10
         )
 
+      case Environment.Live =>
+        new Configuration(
+          ROOT = "https://payment-practices-reporting.herokuapp.com",
+          PAGE_TIMEOUT_SECS = 10
+        )
+
       case _ => throw new IllegalArgumentException(s"Environment '$environment' not known")
     }
   }
@@ -61,7 +68,7 @@ object Configuration {
 
 object Environment extends Enumeration {
   type Name = Value
-  val Dev, Local, Acceptance = Value
+  val Dev, Local, Acceptance, Live = Value
 }
 
 

@@ -63,9 +63,9 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   }
 
   Then("""it should show that the financial year runs from (.+) to (.+)""") { (startDate: String, endDate: String) =>
-      val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
-      doc.textOf("financial-year-start") shouldBe startDate
-      doc.textOf("financial-year-end") shouldBe endDate
+    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    doc.textOf("financial-year-start") shouldBe startDate
+    doc.textOf("financial-year-end") shouldBe endDate
   }
 
   Then("""if the (.+) is before (.+) then I should see a message about that""") { (endDate: String, cutoffDate: String) =>
@@ -81,6 +81,11 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   Then("""form error should be '(.+)'""") { s: String =>
     val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
     doc.textOf("form-errors") shouldBe s
+  }
+
+  Then("""field error for (.+) should be '(.+)'""") { (fieldName: String, s: String) =>
+    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    doc.textOf(s"error-$fieldName") shouldBe s
   }
 
 }
