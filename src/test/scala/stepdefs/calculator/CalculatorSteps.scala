@@ -19,11 +19,14 @@ package stepdefs.calculator
 
 import cucumber.api.scala.{EN, ScalaDsl}
 import driver.StartUpTearDown
+import org.joda.time.format.DateTimeFormat
 import org.scalatest.{Matchers, OptionValues}
 import pages.CurrentPage
 
 class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with OptionValues {
   implicit val driver = CurrentPage.webDriver
+
+  val df = DateTimeFormat.forPattern("d MMMM YYYY")
 
   Then("""^I should see ([0-9]+) calculated periods$""") { count: Int =>
     (1 to count).foreach { i =>
@@ -44,5 +47,19 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
       CurrentPage.IdQuery(s"deadline-$i").webElement.getText shouldBe deadline
   }
 
+  Then("""it should show that the financial year runs from (.+) to (.+)""") {
+    (startDate: String, endDate: String) =>
+      CurrentPage.IdQuery("financial-year-start").webElement.getText shouldBe startDate
+      CurrentPage.IdQuery("financial-year-end").webElement.getText shouldBe endDate
+  }
+
+  Then("""if the (.+) is before (.+) then I should see a message about that""") { (endDate: String, cutoffDate:String) =>
+    val d = df.parseLocalDate(endDate)
+    val cutoff = df.parseLocalDate(cutoffDate)
+
+    if (d.isBefore(cutoff)) {
+      CurrentPage.IdQuery("no-need-to-report").findElement shouldBe a [Some[_]]
+    }
+  }
 
 }
