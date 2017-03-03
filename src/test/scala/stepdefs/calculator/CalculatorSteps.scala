@@ -21,12 +21,22 @@ import cucumber.api.scala.{EN, ScalaDsl}
 import driver.StartUpTearDown
 import org.joda.time.format.DateTimeFormat
 import org.jsoup.nodes.Document
+import org.jsoup.parser.Parser
 import org.scalatest.{Matchers, OptionValues}
 import pages.CurrentPage
 
 class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with OptionValues {
   implicit val driver = CurrentPage.webDriver
 
+  /**
+    * Turns out it is *way* faster to grab the text of the page, parse it with jsoup and
+    * find elements in the resulting Document than it is to look up elements with the
+    * selenium driver. This is particularly true when checking that an element is *not*
+    * present on the page, as the selenium driver will wait for 1 second before deciding
+    * it can't find the element.
+    *
+    * This implicit class adds some convenient syntax around the Document.
+    */
   implicit class DocSyntax(doc: Document) {
     def elementById(id: String) = Option(doc.getElementById(id))
 
@@ -40,7 +50,7 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   val df = DateTimeFormat.forPattern("d MMMM YYYY")
 
   Then("""^I should see ([0-9]+) calculated periods$""") { count: Int =>
-    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    val doc = Parser.parse(CurrentPage.pageText, "")
 
     (1 to count).foreach { i =>
       doc.shouldBePresent(s"period-start-$i")
@@ -55,7 +65,7 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
 
   Then("""^Period ([0-9]+) should run from (.+) to (.+) with deadline (.+)$""") {
     (i: Int, start: String, end: String, deadline: String) =>
-      val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+      val doc = Parser.parse(CurrentPage.pageText, "")
 
       doc.textOf(s"period-start-$i") shouldBe start
       doc.textOf(s"period-end-$i") shouldBe end
@@ -63,13 +73,13 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   }
 
   Then("""it should show that the financial year runs from (.+) to (.+)""") { (startDate: String, endDate: String) =>
-    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    val doc = Parser.parse(CurrentPage.pageText, "")
     doc.textOf("financial-year-start") shouldBe startDate
     doc.textOf("financial-year-end") shouldBe endDate
   }
 
   Then("""if the (.+) is before (.+) then I should see a message about that""") { (endDate: String, cutoffDate: String) =>
-    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    val doc = Parser.parse(CurrentPage.pageText, "")
     val d = df.parseLocalDate(endDate)
     val cutoff = df.parseLocalDate(cutoffDate)
 
@@ -79,12 +89,12 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   }
 
   Then("""form error should be '(.+)'""") { s: String =>
-    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    val doc = Parser.parse(CurrentPage.pageText, "")
     doc.textOf("form-errors") shouldBe s
   }
 
   Then("""field error for (.+) should be '(.+)'""") { (fieldName: String, s: String) =>
-    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    val doc = Parser.parse(CurrentPage.pageText, "")
     doc.textOf(s"error-$fieldName") shouldBe s
   }
 
