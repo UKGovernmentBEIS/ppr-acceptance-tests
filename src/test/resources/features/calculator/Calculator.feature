@@ -56,7 +56,3 @@ Feature: Calculate reporting periods and filing deadlines
       | 28 August 2017 | 27 August 2019    | 28 August 2017 | 27 February 2018 | 29 March 2018 | 28 February 2018 | 27 August 2018   | 26 September 2018 | 28 August 2018 | 27 August 2019    | 26 September 2019 |
 
 
-  Scenario: Don't enter any dates
-    Given I navigate to the Calculator page
-    And I click on 'Continue'
-    Then I should see the Calculator page with errors

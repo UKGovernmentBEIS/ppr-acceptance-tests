@@ -20,46 +20,67 @@ package stepdefs.calculator
 import cucumber.api.scala.{EN, ScalaDsl}
 import driver.StartUpTearDown
 import org.joda.time.format.DateTimeFormat
+import org.jsoup.nodes.Document
 import org.scalatest.{Matchers, OptionValues}
 import pages.CurrentPage
 
 class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with OptionValues {
   implicit val driver = CurrentPage.webDriver
 
+  implicit class DocSyntax(doc: Document) {
+    def elementById(id: String) = Option(doc.getElementById(id))
+
+    def textOf(id: String) = elementById(id).value.text
+
+    def shouldBePresent(id: String) = elementById(id).isDefined shouldBe true
+
+    def shouldNotBePresent(id: String) = elementById(id).isDefined shouldBe false
+  }
+
   val df = DateTimeFormat.forPattern("d MMMM YYYY")
 
   Then("""^I should see ([0-9]+) calculated periods$""") { count: Int =>
+    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+
     (1 to count).foreach { i =>
-      CurrentPage.IdQuery(s"period-start-$i").findElement shouldBe a[Some[_]]
-      CurrentPage.IdQuery(s"period-end-$i").findElement shouldBe a[Some[_]]
-      CurrentPage.IdQuery(s"deadline-$i").findElement shouldBe a[Some[_]]
+      doc.shouldBePresent(s"period-start-$i")
+      doc.shouldBePresent(s"period-end-$i")
+      doc.shouldBePresent(s"deadline-$i")
     }
 
-    CurrentPage.IdQuery(s"period-start-${count + 1}").findElement shouldBe None
-    CurrentPage.IdQuery(s"period-end-${count + 1}").findElement shouldBe None
-    CurrentPage.IdQuery(s"deadline-${count + 1}").findElement shouldBe None
+    doc.shouldNotBePresent(s"period-start-${count + 1}")
+    doc.shouldNotBePresent(s"period-end-${count + 1}")
+    doc.shouldNotBePresent(s"deadline-${count + 1}")
   }
 
   Then("""^Period ([0-9]+) should run from (.+) to (.+) with deadline (.+)$""") {
     (i: Int, start: String, end: String, deadline: String) =>
-      CurrentPage.IdQuery(s"period-start-$i").webElement.getText shouldBe start
-      CurrentPage.IdQuery(s"period-end-$i").webElement.getText shouldBe end
-      CurrentPage.IdQuery(s"deadline-$i").webElement.getText shouldBe deadline
+      val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+
+      doc.textOf(s"period-start-$i") shouldBe start
+      doc.textOf(s"period-end-$i") shouldBe end
+      doc.textOf(s"deadline-$i") shouldBe deadline
   }
 
-  Then("""it should show that the financial year runs from (.+) to (.+)""") {
-    (startDate: String, endDate: String) =>
-      CurrentPage.IdQuery("financial-year-start").webElement.getText shouldBe startDate
-      CurrentPage.IdQuery("financial-year-end").webElement.getText shouldBe endDate
+  Then("""it should show that the financial year runs from (.+) to (.+)""") { (startDate: String, endDate: String) =>
+      val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+      doc.textOf("financial-year-start") shouldBe startDate
+      doc.textOf("financial-year-end") shouldBe endDate
   }
 
-  Then("""if the (.+) is before (.+) then I should see a message about that""") { (endDate: String, cutoffDate:String) =>
+  Then("""if the (.+) is before (.+) then I should see a message about that""") { (endDate: String, cutoffDate: String) =>
+    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
     val d = df.parseLocalDate(endDate)
     val cutoff = df.parseLocalDate(cutoffDate)
 
     if (d.isBefore(cutoff)) {
-      CurrentPage.IdQuery("no-need-to-report").findElement shouldBe a [Some[_]]
+      doc.shouldBePresent("no-need-to-report")
     }
+  }
+
+  Then("""form error should be '(.+)'""") { s: String =>
+    val doc = org.jsoup.parser.Parser.parse(CurrentPage.pageText, "")
+    doc.textOf("form-errors") shouldBe s
   }
 
 }

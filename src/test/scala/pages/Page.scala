@@ -33,7 +33,7 @@ trait PageLoading {
 
   def isOnPage: Boolean = getPageTitle.contains(titleString)
 
-  def navigateToPage(url: String) {
+  def navigateToPage(url: String): Unit = {
     go to url
   }
 
@@ -49,14 +49,14 @@ trait PageLoading {
 
   def urlRoot = Configuration.settings.ROOT
 
-  def open() {
+  def open(): Unit = {
     navigateToPage(s"$urlRoot$pageURL")
     waitForLoad()
   }
 
   def waitForLoad(): Unit = waitForPageToBeLoaded(isOnPage, s"$pageName page failed to load")
 
-  def waitForPageToBeLoaded(condition: => Boolean, exceptionMessage: String, timeoutInSeconds: Int = Configuration.settings.PAGE_TIMEOUT_SECS) {
+  def waitForPageToBeLoaded(condition: => Boolean, exceptionMessage: String, timeoutInSeconds: Int = Configuration.settings.PAGE_TIMEOUT_SECS): Unit = {
     val endTime = System.currentTimeMillis + timeoutInSeconds * 1000
     while (System.currentTimeMillis < endTime) {
       try {
@@ -82,6 +82,7 @@ trait PageLoading {
       if (source.contains("An unexpected problem occurred during authentication.")) {
         throw new Server500ResponseException("IDA Login Error")
       }
+      println("delay")
       FixedDelay(100)
     }
     throw new HmrcPageWaitException(exceptionMessage + "\nThe current page was:\n" + webDriver.getPageSource)

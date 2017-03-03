@@ -36,7 +36,6 @@ class PageSteps extends ScalaDsl with EN with Matchers with StartUpTearDown {
     PageTable.lookupPage(pageName) match {
       case None => fail(s"could not find a page with name $pageName (did you forget to add the page object to the PageTable?)")
       case Some(page) =>
-        page.waitForLoad()
         withError match {
           case "an error" | "errors" => CurrentPage.hasErrors shouldBe true
           case "a success message" => CurrentPage.elementDisplayed(By.className("success")) shouldBe true

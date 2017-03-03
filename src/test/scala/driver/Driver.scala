@@ -54,8 +54,8 @@ class Driver {
     if (!StringUtils.isEmpty(systemProperties.getProperty("browser"))) {
       val targetBrowser = systemProperties.getProperty("browser")
       if (targetBrowser.equalsIgnoreCase("firefox")) {
+        Firefox.firefoxProfile.setAcceptUntrustedCertificates(true)
         selectedDriver = Firefox.webDriver
-        selectedDriver.manage().window().maximize()
       } else if (targetBrowser.equalsIgnoreCase("phone_mock")) {
         val d = new Dimension(320, 480)
         selectedDriver = Firefox.webDriver
