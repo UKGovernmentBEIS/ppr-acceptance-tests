@@ -21,9 +21,9 @@ import cucumber.api.scala.{EN, ScalaDsl}
 import driver.StartUpTearDown
 import org.joda.time.format.DateTimeFormat
 import org.jsoup.nodes.Document
-import org.jsoup.parser.Parser
 import org.scalatest.{Matchers, OptionValues}
 import pages.CurrentPage
+import pages.calculator.Answer
 
 class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with OptionValues {
   implicit val driver = CurrentPage.webDriver
@@ -50,7 +50,7 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   val df = DateTimeFormat.forPattern("d MMMM YYYY")
 
   Then("""^I should see ([0-9]+) calculated periods$""") { count: Int =>
-    val doc = Parser.parse(CurrentPage.pageText, "")
+    val doc = Answer.doc
 
     (1 to count).foreach { i =>
       doc.shouldBePresent(s"period-start-$i")
@@ -65,7 +65,7 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
 
   Then("""^Period ([0-9]+) should run from (.+) to (.+) with deadline (.+)$""") {
     (i: Int, start: String, end: String, deadline: String) =>
-      val doc = Parser.parse(CurrentPage.pageText, "")
+      val doc = Answer.doc
 
       doc.textOf(s"period-start-$i") shouldBe start
       doc.textOf(s"period-end-$i") shouldBe end
@@ -73,13 +73,13 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   }
 
   Then("""it should show that the financial year runs from (.+) to (.+)""") { (startDate: String, endDate: String) =>
-    val doc = Parser.parse(CurrentPage.pageText, "")
+    val doc = Answer.doc
     doc.textOf("financial-year-start") shouldBe startDate
     doc.textOf("financial-year-end") shouldBe endDate
   }
 
   Then("""if the (.+) is before (.+) then I should see a message about that""") { (endDate: String, cutoffDate: String) =>
-    val doc = Parser.parse(CurrentPage.pageText, "")
+    val doc = Answer.doc
     val d = df.parseLocalDate(endDate)
     val cutoff = df.parseLocalDate(cutoffDate)
 
@@ -89,12 +89,12 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
   }
 
   Then("""form error should be '(.+)'""") { s: String =>
-    val doc = Parser.parse(CurrentPage.pageText, "")
+    val doc = Answer.doc
     doc.textOf("form-errors") shouldBe s
   }
 
   Then("""field error for (.+) should be '(.+)'""") { (fieldName: String, s: String) =>
-    val doc = Parser.parse(CurrentPage.pageText, "")
+    val doc = Answer.doc
     doc.textOf(s"error-$fieldName") shouldBe s
   }
 

@@ -24,6 +24,8 @@ import config.{Configuration, Environment}
 import driver.exceptions.{Server500ResponseException, Server502ResponseException}
 import driver.{Driver, FixedDelay}
 import org.joda.time.LocalDate
+import org.jsoup.nodes.Document
+import org.jsoup.parser.Parser
 import org.openqa.selenium.{By, NoSuchElementException, WebDriver}
 import org.scalatest.concurrent.Eventually
 import org.scalatest.selenium
@@ -38,8 +40,6 @@ trait PageLoading {
   }
 
   def pageName: String
-
-  def pageURL: String
 
   def titleString: String
 
@@ -103,6 +103,8 @@ object CurrentPage extends Page {
     numberField(s"$name.month").value = d.getMonthOfYear.toString
     numberField(s"$name.year").value = d.getYear.toString
   }
+
+  override val pageURL = ""
 }
 
 trait Page extends selenium.WebBrowser with Eventually {
@@ -137,6 +139,8 @@ trait Page extends selenium.WebBrowser with Eventually {
 
   def pageText = webDriver.getPageSource
 
+  def pageURL: String
+
   def getPageSource = webDriver.getPageSource
 
   def getPageHeadingTitle = webDriver.findElement(By.tagName("h1")).getText
@@ -145,5 +149,5 @@ trait Page extends selenium.WebBrowser with Eventually {
 
   def getCurrentUrlInBrowser: String = webDriver.getCurrentUrl
 
-
+  def doc: Document = Parser.parse(pageText, pageURL)
 }
