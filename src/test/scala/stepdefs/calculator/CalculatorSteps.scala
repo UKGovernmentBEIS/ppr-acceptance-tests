@@ -20,32 +20,13 @@ package stepdefs.calculator
 import cucumber.api.scala.{EN, ScalaDsl}
 import driver.StartUpTearDown
 import org.joda.time.format.DateTimeFormat
-import org.jsoup.nodes.Document
-import org.scalatest.{Matchers, OptionValues}
+import org.scalatest.Matchers
 import pages.CurrentPage
 import pages.calculator.Answer
+import stepdefs.DocValues
 
-class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with OptionValues {
+class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with DocValues {
   implicit val driver = CurrentPage.webDriver
-
-  /**
-    * Turns out it is *way* faster to grab the text of the page, parse it with jsoup and
-    * find elements in the resulting Document than it is to look up elements with the
-    * selenium driver. This is particularly true when checking that an element is *not*
-    * present on the page, as the selenium driver will wait for 1 second before deciding
-    * it can't find the element.
-    *
-    * This implicit class adds some convenient syntax around the Document.
-    */
-  implicit class DocSyntax(doc: Document) {
-    def elementById(id: String) = Option(doc.getElementById(id))
-
-    def textOf(id: String) = elementById(id).value.text
-
-    def shouldBePresent(id: String) = elementById(id).isDefined shouldBe true
-
-    def shouldNotBePresent(id: String) = elementById(id).isDefined shouldBe false
-  }
 
   val df = DateTimeFormat.forPattern("d MMMM YYYY")
 
@@ -53,14 +34,14 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
     val doc = Answer.doc
 
     (1 to count).foreach { i =>
-      doc.shouldBePresent(s"period-start-$i")
-      doc.shouldBePresent(s"period-end-$i")
-      doc.shouldBePresent(s"deadline-$i")
+      doc shouldHaveElementWithId s"period-start-$i"
+      doc shouldHaveElementWithId s"period-end-$i"
+      doc shouldHaveElementWithId s"deadline-$i"
     }
 
-    doc.shouldNotBePresent(s"period-start-${count + 1}")
-    doc.shouldNotBePresent(s"period-end-${count + 1}")
-    doc.shouldNotBePresent(s"deadline-${count + 1}")
+    doc shouldNotHaveElementWithId s"period-start-${count + 1}"
+    doc shouldNotHaveElementWithId s"period-end-${count + 1}"
+    doc shouldNotHaveElementWithId s"deadline-${count + 1}"
   }
 
   Then("""^Period ([0-9]+) should run from (.+) to (.+) with deadline (.+)$""") {
@@ -84,7 +65,7 @@ class CalculatorSteps extends ScalaDsl with EN with Matchers with StartUpTearDow
     val cutoff = df.parseLocalDate(cutoffDate)
 
     if (d.isBefore(cutoff)) {
-      doc.shouldBePresent("no-need-to-report")
+      doc shouldHaveElementWithId "no-need-to-report"
     }
   }
 
