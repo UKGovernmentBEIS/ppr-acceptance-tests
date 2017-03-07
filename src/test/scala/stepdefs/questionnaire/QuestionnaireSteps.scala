@@ -15,15 +15,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pages
+package stepdefs.questionnaire
 
-import pages.calculator.{Answer, Calculator}
-import pages.questionnaire._
+import cucumber.api.scala.{EN, ScalaDsl}
+import driver.StartUpTearDown
+import org.scalatest.Matchers
+import pages.CurrentPage
+import stepdefs.DocValues
 
-object PageTable {
+class QuestionnaireSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with DocValues {
 
-  val pages = Seq(Calculator, Answer, QuestionnaireStart, CompanyOrLLPQuestion, NoNeedToReport, FinancialYearQuestion)
-
-  def lookupPage(pageName: String): Option[Page with PageLoading] = pages.find(_.pageName == pageName)
+  Then("""^the reason should be "(.+)"$""") { reason: String =>
+    CurrentPage.doc.elementById("reason").value.text shouldBe reason
+  }
 
 }

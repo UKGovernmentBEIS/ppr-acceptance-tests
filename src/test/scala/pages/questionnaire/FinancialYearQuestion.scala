@@ -15,15 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pages
+package pages.questionnaire
 
-import pages.calculator.{Answer, Calculator}
-import pages.questionnaire._
+import pages.{Page, PageLoading}
 
-object PageTable {
+object FinancialYearQuestion extends Page with PageLoading {
+  override def pageName: String = "Financial Year Question"
 
-  val pages = Seq(Calculator, Answer, QuestionnaireStart, CompanyOrLLPQuestion, NoNeedToReport, FinancialYearQuestion)
+  override def pageURL: String = "/check-if-you-need-to-report/questions"
 
-  def lookupPage(pageName: String): Option[Page with PageLoading] = pages.find(_.pageName == pageName)
-
+  override def titleString: String = "Which financial year is your business currently in?"
 }

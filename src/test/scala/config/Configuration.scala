@@ -26,7 +26,7 @@ object Configuration {
     environmentProperty match {
       case "dev" => Environment.Dev
       case "local" => Environment.Local
-      case "acceptance" => Environment.Acceptance
+      case "ur" => Environment.UR
       case "live" => Environment.Live
       case _ => throw new IllegalArgumentException(s"Environment '$environmentProperty' not known")
     }
@@ -49,15 +49,15 @@ object Configuration {
           PAGE_TIMEOUT_SECS = 10
         )
 
-      case Environment.Acceptance =>
+      case Environment.UR =>
         new Configuration(
-          ROOT = ???,
+          ROOT = "https://beis-ppr-ur.herokuapp.com",
           PAGE_TIMEOUT_SECS = 10
         )
 
       case Environment.Live =>
         new Configuration(
-          ROOT = "https://payment-practices-reporting.herokuapp.com",
+          ROOT = "https://beis-ppr-live.herokuapp.com",
           PAGE_TIMEOUT_SECS = 10
         )
 
@@ -68,7 +68,7 @@ object Configuration {
 
 object Environment extends Enumeration {
   type Name = Value
-  val Dev, Local, Acceptance, Live = Value
+  val Dev, Local, UR, Live = Value
 }
 
 
