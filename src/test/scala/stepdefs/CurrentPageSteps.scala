@@ -73,7 +73,7 @@ class CurrentPageSteps extends ScalaDsl with EN with Matchers with StartUpTearDo
 
   Given("""^I click on '(.+)'$""") { buttonName: String => CurrentPage.clickOn(By.name(buttonName)) }
 
-  Given("""I select '(.+)'""") { checkboxId: String => CurrentPage.clickOn(By.id(checkboxId.toLowerCase)) }
+  Given("""I select '(.+)'$""") { checkboxId: String => CurrentPage.clickOn(By.id(checkboxId.toLowerCase)) }
 
   Then("""^the fields should be populated with the values I set$""") { () =>
     suppliedValues.foreach {

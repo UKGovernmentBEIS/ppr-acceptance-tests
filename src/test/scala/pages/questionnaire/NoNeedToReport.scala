@@ -26,3 +26,11 @@ object NoNeedToReport extends Page with PageLoading {
 
   override def titleString: String = "Your business does not need to publish reports"
 }
+
+object NeedToReport extends Page with PageLoading {
+  override def pageName: String = "Need to report"
+
+  override def pageURL: String = "/check-if-you-need-to-report/exempt"
+
+  override def titleString: String = "Your business must publish reports"
+}

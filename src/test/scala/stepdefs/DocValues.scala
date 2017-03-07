@@ -17,8 +17,10 @@
 
 package stepdefs
 
-import org.jsoup.nodes.Document
+import org.jsoup.nodes.{Document, Element}
 import org.scalatest.{Matchers, OptionValues}
+
+import scala.collection.JavaConversions._
 
 trait DocValues extends Matchers with OptionValues {
 
@@ -33,6 +35,8 @@ trait DocValues extends Matchers with OptionValues {
     */
   implicit class DocSyntax(doc: Document) {
     def elementById(id: String) = Option(doc.getElementById(id))
+
+    def elementsByClass(className: String): List[Element] = doc.getElementsByClass(className).toList
 
     def textOf(id: String) = elementById(id).value.text
 

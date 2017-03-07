@@ -51,6 +51,13 @@ class Driver {
       Try(webDriver.quit())
     }
 
+    def phantomjsDriver() = {
+      val cap = new DesiredCapabilities()
+      cap.setJavascriptEnabled(true)
+      selectedDriver = PhantomJSDriverObject(cap)
+      selectedDriver.manage().window().maximize()
+    }
+
     if (!StringUtils.isEmpty(systemProperties.getProperty("browser"))) {
       val targetBrowser = systemProperties.getProperty("browser")
       if (targetBrowser.equalsIgnoreCase("firefox")) {
@@ -72,16 +79,12 @@ class Driver {
         selectedDriver.manage().window().maximize()
         selectedDriver = Chrome.webDriver
       } else if (targetBrowser.equalsIgnoreCase("phantomjs")) {
-        val cap = new DesiredCapabilities()
-        cap.setJavascriptEnabled(true)
-        selectedDriver = PhantomJSDriverObject(cap)
-        selectedDriver.manage().window().maximize()
+        phantomjsDriver()
       }
     }
 
     if (selectedDriver == null) {
-      Firefox.firefoxProfile.setAcceptUntrustedCertificates(true)
-      selectedDriver = Firefox.webDriver
+      phantomjsDriver()
     }
 
     selectedDriver.manage().timeouts().implicitlyWait(implicitWait, TimeUnit.MILLISECONDS)

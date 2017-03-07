@@ -1,3 +1,4 @@
+@Calculator
 Feature: Calculate reporting periods and filing deadlines
 
   Scenario Outline: Calculate one period and deadline

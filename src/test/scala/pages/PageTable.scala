@@ -22,7 +22,9 @@ import pages.questionnaire._
 
 object PageTable {
 
-  val pages = Seq(Calculator, Answer, QuestionnaireStart, CompanyOrLLPQuestion, NoNeedToReport, FinancialYearQuestion)
+  val pages = Seq(Calculator, Answer,
+    QuestionnaireStart, CompanyOrLLPQuestion, NoNeedToReport, NeedToReport, FinancialYearQuestion,
+    CompanyTurnoverQuestion, CompanyBalanceSheetQuestion, SubsidiariesQuestion)
 
   def lookupPage(pageName: String): Option[Page with PageLoading] = pages.find(_.pageName == pageName)
 

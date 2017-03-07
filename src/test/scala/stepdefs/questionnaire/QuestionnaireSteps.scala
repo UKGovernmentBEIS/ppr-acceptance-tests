@@ -19,14 +19,36 @@ package stepdefs.questionnaire
 
 import cucumber.api.scala.{EN, ScalaDsl}
 import driver.StartUpTearDown
+import org.openqa.selenium.By
 import org.scalatest.Matchers
-import pages.CurrentPage
+import pages.{CurrentPage, PageTable}
 import stepdefs.DocValues
 
 class QuestionnaireSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with DocValues {
+  val With = new Step("With")
 
-  Then("""^the reason should be "(.+)"$""") { reason: String =>
+  Then("""^the message should be "(.+)"$""") { reason: String =>
     CurrentPage.doc.elementById("reason").value.text shouldBe reason
+  }
+
+  Given("""I select '(.+)' and continue$""") { checkboxId: String =>
+    CurrentPage.clickOn(By.id(checkboxId.toLowerCase))
+    CurrentPage.clickOn(By.name("Continue"))
+  }
+
+  Given("""I select '(.+)' and continue to the (.+) page$""") { (checkboxId: String, pageName: String) =>
+    CurrentPage.clickOn(By.id(checkboxId.toLowerCase))
+    CurrentPage.clickOn(By.name("Continue"))
+    PageTable.lookupPage(pageName) match {
+      case None => fail(s"could not find a page with name $pageName (did you forget to add the page object to the PageTable?)")
+      case Some(page) => page.waitForLoad()
+    }
+  }
+
+  With("""^I should see a reason of "(.+)"$""") { reason:String =>
+    val doc = CurrentPage.doc
+
+    doc.elementsByClass("reason").map(_.text) should contain(reason)
   }
 
 }

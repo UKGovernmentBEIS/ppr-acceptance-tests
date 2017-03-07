@@ -1,3 +1,4 @@
+@Calculator
 Feature: Test various error scenarios on the calculator page
 
   Scenario: Don't enter any dates
