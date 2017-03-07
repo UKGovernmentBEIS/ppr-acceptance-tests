@@ -15,20 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import cucumber.api.CucumberOptions
-import cucumber.api.junit.Cucumber
-import org.junit.runner.RunWith
+package pages.questionnaire
 
-@RunWith(classOf[Cucumber])
-@CucumberOptions(
-  features = Array("src/test/resources/features/questionnaire"),
-  glue = Array("stepdefs"),
-  format = Array("pretty",
-    "html:target/cucumber",
-    "json:target/cucumber.json"),
-  tags = Array()
-)
-class RunTestSuite {
+import pages.{Page, PageLoading}
+
+object CompanyOrLLPQuestion extends Page with PageLoading {
+  override def pageName: String = "Company or LLP Question"
+
+  override def pageURL: String = "/check-if-you-need-to-report/questions"
+
+  override def titleString: String = "Is your business a company incorporated in the UK or a limited liability partnership registered in the UK?"
 }
-
-

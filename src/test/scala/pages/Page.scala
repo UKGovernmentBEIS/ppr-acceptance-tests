@@ -82,7 +82,6 @@ trait PageLoading {
       if (source.contains("An unexpected problem occurred during authentication.")) {
         throw new Server500ResponseException("IDA Login Error")
       }
-      println("delay")
       FixedDelay(100)
     }
     throw new HmrcPageWaitException(exceptionMessage + "\nThe current page was:\n" + webDriver.getPageSource)

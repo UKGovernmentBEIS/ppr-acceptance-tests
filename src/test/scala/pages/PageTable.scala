@@ -18,10 +18,11 @@
 package pages
 
 import pages.calculator.{Answer, Calculator}
+import pages.questionnaire.{CompanyOrLLPQuestion, NoNeedToReport, QuestionnaireStart}
 
 object PageTable {
 
-  val pages = Seq(Calculator, Answer)
+  val pages = Seq(Calculator, Answer, QuestionnaireStart, CompanyOrLLPQuestion, NoNeedToReport)
 
   def lookupPage(pageName: String): Option[Page with PageLoading] = pages.find(_.pageName == pageName)
 
