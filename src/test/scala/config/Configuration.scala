@@ -17,35 +17,26 @@
 
 package config
 
+import enumeratum.EnumEntry.Lowercase
+import enumeratum._
+
 case class Configuration(ROOT: String, PAGE_TIMEOUT_SECS: Int)
 
 object Configuration {
 
-  lazy val environment: Environment.Name = {
+  lazy val environment: Environment = {
     val environmentProperty = System.getProperty("environment", "dev").toLowerCase
-    environmentProperty match {
-      case "dev" => Environment.Dev
-      case "local" => Environment.Local
-      case "ur" => Environment.UR
-      case "live" => Environment.Live
-      case _ => throw new IllegalArgumentException(s"Environment '$environmentProperty' not known")
-    }
+    Environment.withNameOption(environmentProperty).getOrElse(throw new IllegalArgumentException(s"Environment '$environmentProperty' not known"))
   }
 
   lazy val settings: Configuration = create()
 
   private def create(): Configuration = {
     environment match {
-      // dev - running in sbt
+      // dev - running in sbt on local machine
       case Environment.Dev =>
         new Configuration(
           ROOT = "http://localhost:9000",
-          PAGE_TIMEOUT_SECS = 10
-        )
-
-      case Environment.Local =>
-        new Configuration(
-          ROOT = ???,
           PAGE_TIMEOUT_SECS = 10
         )
 
@@ -55,9 +46,9 @@ object Configuration {
           PAGE_TIMEOUT_SECS = 10
         )
 
-      case Environment.Live =>
+      case Environment.Staging =>
         new Configuration(
-          ROOT = "https://beis-ppr-live.herokuapp.com",
+          ROOT = "https://beis-ppr-staging.herokuapp.com",
           PAGE_TIMEOUT_SECS = 10
         )
 
@@ -66,9 +57,17 @@ object Configuration {
   }
 }
 
-object Environment extends Enumeration {
-  type Name = Value
-  val Dev, Local, UR, Live = Value
+sealed trait Environment extends EnumEntry with Lowercase
+
+object Environment extends Enum[Environment] {
+  override def values = findValues
+
+  case object Dev extends Environment
+
+  case object UR extends Environment
+
+  case object Staging extends Environment
+
 }
 
 
