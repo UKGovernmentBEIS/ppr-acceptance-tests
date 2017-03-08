@@ -1,43 +1,77 @@
-@Questionnaire
-Feature: Ask questions to see if user needs to publish reports in third year
+@Questionnaire @Year3
+Feature: Ask questions to see if user needs to publish reports in second year
 
-  Scenario: In the third year flow 1
+  Scenario Outline: No need to report without subsidiaries
     Given I navigate to the Questionnaire Start Page page
     And I click on 'Start now'
     Then I should see the Company or LLP Question page
     And I select 'Yes' and continue to the Financial Year Question page
     And I select 'ThirdOrLater' and continue to the Company Turnover Question year 3 page
-    And I select 'No' and continue to the Company Balance Sheet Question year 3 page
-    And I select 'No' and continue
+    And I give the answers <Company Answers>
     Then I should see the No need to report page
     And the message should be "You should check at the beginning of every financial year to see if you need to report."
 
-  Scenario: In the third year flow 2
+    Examples: No subsidiaries
+      | Company Answers |
+      | No No           |
+      | No Yes No       |
+
+  Scenario Outline: No need to report with subsidiaries
     Given I navigate to the Questionnaire Start Page page
     And I click on 'Start now'
     Then I should see the Company or LLP Question page
     And I select 'Yes' and continue to the Financial Year Question page
     And I select 'ThirdOrLater' and continue to the Company Turnover Question year 3 page
-    And I select 'Yes' and continue to the Company Balance Sheet Question year 3 page
-    And I select 'Yes' and continue to the Subsidiaries Question page
-    And I select 'No' and continue
-    Then I should see the Need to report page
-    And I should see a reason of "had a turnover of more than £36 million on its last 2 balance sheet dates"
-    And I should see a reason of "had more than £18 million balance sheet total on its last 2 balance sheet dates"
+    And I give the answers <Company Answers>
+    Then I should see the Subsidiaries Question page
+    And I select 'Yes' and continue
+    And I give the answers <Subsidiary Answers>
+    Then I should see the No need to report page
+    And the message should be "You should check at the beginning of every financial year to see if you need to report."
 
-  Scenario: In the third year flow 3
+    Examples: Subsidiaries
+      | Company Answers | Subsidiary Answers |
+      | Yes Yes         | No No              |
+      | Yes No Yes      | No No              |
+      | Yes Yes         | Yes No No          |
+      | Yes No Yes      | Yes No No          |
+
+
+  Scenario Outline: Need to report without subsidiaries
     Given I navigate to the Questionnaire Start Page page
     And I click on 'Start now'
     Then I should see the Company or LLP Question page
     And I select 'Yes' and continue to the Financial Year Question page
     And I select 'ThirdOrLater' and continue to the Company Turnover Question year 3 page
-    And I select 'Yes' and continue to the Company Balance Sheet Question year 3 page
-    And I select 'No' and continue to the Company Employee Question year 3 page
-    And I select 'Yes' and continue to the Subsidiaries Question page
+    And I give the answers <Company Answers>
+    Then I should see the Subsidiaries Question page
     And I select 'No' and continue
     Then I should see the Need to report page
-    And I should see a reason of "had a turnover of more than £36 million on its last 2 balance sheet dates"
-    And I should see a reason of "had an average of more than 250 employees during both of its last 2 financial years"
+    And I should see the reasons <Reasons>
 
-  Scenario:
-    G
+    Examples: No subsidiaries
+      | Company Answers | Reasons                                  |
+      | Yes Yes         | company.turnover.y3 company.balance.y3   |
+      | Yes No Yes      | company.turnover.y3 company.employees.y3 |
+      | No Yes Yes      | company.balance.y3  company.employees.y3 |
+
+  Scenario Outline: Need to report with subsidiaries
+    Given I navigate to the Questionnaire Start Page page
+    And I click on 'Start now'
+    Then I should see the Company or LLP Question page
+    And I select 'Yes' and continue to the Financial Year Question page
+    And I select 'ThirdOrLater' and continue to the Company Turnover Question year 3 page
+    And I give the answers <Company Answers>
+    Then I should see the Subsidiaries Question page
+    And I select 'Yes' and continue
+    And I give the answers <Subsidiary Answers>
+    Then I should see the Need to report page
+    And I should see the reasons <Reasons>
+
+    Examples: With subsidiaries
+      | Company Answers | Subsidiary Answers | Reasons                                                                       |
+      | Yes Yes         | Yes Yes            | company.turnover.y3 company.balance.y3 group.turnover.y3 group.balance.y3     |
+      | Yes No Yes      | Yes No Yes         | company.turnover.y3 company.employees.y3 group.turnover.y3 group.employees.y3 |
+      | No Yes Yes      | No Yes Yes         | company.balance.y3 company.employees.y3 group.balance.y3 group.employees.y3   |
+
+
