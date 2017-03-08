@@ -39,3 +39,5 @@ Feature: Ask questions to see if user needs to publish reports in third year
     And I should see a reason of "had a turnover of more than £36 million on its last 2 balance sheet dates"
     And I should see a reason of "had an average of more than 250 employees during both of its last 2 financial years"
 
+  Scenario:
+    G

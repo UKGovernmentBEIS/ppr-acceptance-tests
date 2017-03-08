@@ -25,7 +25,14 @@ import pages.{CurrentPage, PageTable}
 import stepdefs.DocValues
 
 class QuestionnaireSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with DocValues {
-  val With = new Step("With")
+  val reasonTable: Map[String, String] = Map(
+    "company.turnover.y2" -> "had a turnover of more than £36 million on its last balance sheet date",
+    "company.balance.y2" -> "had more than £18 million balance sheet total on its last balance sheet date",
+    "company.employees.y2" -> "had an average of more than 250 employees during its last financial year",
+    "group.turnover.y2" -> "had a total turnover of at least £36 million net or £43.2 million gross on their last balance sheet date",
+    "group.balance.y2" -> "had a combined balance sheet total of £18 million net or £21.6 million gross on their last balance sheet date",
+    "group.employees.y2" -> "had an average of more than 250 employees during their last financial year"
+  )
 
   Then("""^the message should be "(.+)"$""") { reason: String =>
     CurrentPage.doc.elementById("reason").value.text shouldBe reason
@@ -45,10 +52,25 @@ class QuestionnaireSteps extends ScalaDsl with EN with Matchers with StartUpTear
     }
   }
 
-  With("""^I should see a reason of "(.+)"$""") { reason:String =>
+  Then("""^I should see a reason of "(.+)"$""") { reason: String =>
     val doc = CurrentPage.doc
 
     doc.elementsByClass("reason").map(_.text) should contain(reason)
+  }
+
+  Then("""^I should see the reasons (.+)$""") { reasons: String =>
+    val doc = CurrentPage.doc
+
+    reasons.split("\\s+").foreach { reason =>
+      doc.elementsByClass("reason").map(_.text) should contain(reasonTable(reason))
+    }
+  }
+
+  Given("""^I give the answers (.+)$""") { answers: String =>
+    answers.split("\\s+").foreach { yesNo =>
+      CurrentPage.clickOn(By.id(yesNo.toLowerCase))
+      CurrentPage.clickOn(By.name("Continue"))
+    }
   }
 
 }
