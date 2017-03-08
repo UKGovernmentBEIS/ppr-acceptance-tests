@@ -61,9 +61,10 @@ class QuestionnaireSteps extends ScalaDsl with EN with Matchers with StartUpTear
   Then("""^I should see the reasons (.+)$""") { reasons: String =>
     val doc = CurrentPage.doc
 
-    reasons.split("\\s+").foreach { reason =>
-      doc.elementsByClass("reason").map(_.text) should contain(reasonTable(reason))
-    }
+    val expectedReasons = reasons.split("\\s+").map(reasonTable(_)).toSet
+    val actualReasons = doc.elementsByClass("reason").map(_.text).toSet
+
+    actualReasons shouldBe expectedReasons
   }
 
   Given("""^I give the answers (.+)$""") { answers: String =>
