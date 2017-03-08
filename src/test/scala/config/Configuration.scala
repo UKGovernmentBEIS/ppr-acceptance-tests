@@ -34,9 +34,15 @@ object Configuration {
   private def create(): Configuration = {
     environment match {
       // dev - running in sbt on local machine
-      case Environment.Dev =>
+      case Environment.Local =>
         new Configuration(
           ROOT = "http://localhost:9000",
+          PAGE_TIMEOUT_SECS = 10
+        )
+
+      case Environment.Dev =>
+        new Configuration(
+          ROOT = "https://beis-ppr-dev.herokuapp.com",
           PAGE_TIMEOUT_SECS = 10
         )
 
@@ -61,6 +67,8 @@ sealed trait Environment extends EnumEntry with Lowercase
 
 object Environment extends Enum[Environment] {
   override def values = findValues
+
+  case object Local extends Environment
 
   case object Dev extends Environment
 
