@@ -13,7 +13,7 @@ parallelExecution in Test := false
 enablePlugins(GitVersioning)
 enablePlugins(GitBranchPrompt)
 
-val seleniumVersion = "2.49.0"
+val seleniumVersion = "2.53.1"
 val cucumberVersion = "1.2.5"
 
 libraryDependencies ++= Seq(
