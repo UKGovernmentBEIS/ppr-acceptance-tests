@@ -19,9 +19,9 @@ package driver
 
 import java.util.concurrent.TimeUnit
 
-import org.apache.commons.lang3.StringUtils
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.{Dimension, WebDriver}
+import org.scalactic.TripleEquals._
 import org.scalatest.selenium.{Chrome, Firefox, HtmlUnit}
 
 import scala.util.Try
@@ -58,7 +58,9 @@ class Driver {
       selectedDriver.manage().window().maximize()
     }
 
-    if (!StringUtils.isEmpty(systemProperties.getProperty("browser"))) {
+    def isEmpty(s: String) = s === null || s.trim === ""
+
+    if (!isEmpty(systemProperties.getProperty("browser"))) {
       val targetBrowser = systemProperties.getProperty("browser")
       if (targetBrowser.equalsIgnoreCase("firefox")) {
         Firefox.firefoxProfile.setAcceptUntrustedCertificates(true)
