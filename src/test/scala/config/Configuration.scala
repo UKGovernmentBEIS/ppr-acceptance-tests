@@ -25,7 +25,7 @@ case class Configuration(ROOT: String, PAGE_TIMEOUT_SECS: Int)
 object Configuration {
 
   lazy val environment: Environment = {
-    val environmentProperty = System.getProperty("environment", "dev").toLowerCase
+    val environmentProperty = System.getProperty("environment", "local").toLowerCase
     Environment.withNameOption(environmentProperty).getOrElse(throw new IllegalArgumentException(s"Environment '$environmentProperty' not known"))
   }
 
