@@ -19,8 +19,8 @@ package stepdefs.report
 
 import cucumber.api.DataTable
 import cucumber.api.scala._
-import driver.StartUpTearDown
-import org.openqa.selenium.{By, Keys}
+import driver.{FixedDelay, StartUpTearDown}
+import org.openqa.selenium.By
 import org.scalatest.Matchers
 import pages.CurrentPage
 import pages.report._
@@ -76,7 +76,12 @@ class ReportSteps extends ScalaDsl with EN with Matchers with StartUpTearDown wi
       CurrentPage.clickOn(By.name(fieldName))
       CurrentPage.numberField(fieldName).value = value
       CurrentPage.pressKeys("\t")
-      CurrentPage.IdQuery(errorSpanId).findElement(CurrentPage.webDriver).value.text.trim shouldBe expectedErrorText
+      FixedDelay(20)
+
+      val actualErrorText = CurrentPage.IdQuery(errorSpanId).findElement(CurrentPage.webDriver).value.text.trim
+      withClue(s"$fieldName with value $value") {
+        actualErrorText shouldBe expectedErrorText
+      }
     }
   }
 
