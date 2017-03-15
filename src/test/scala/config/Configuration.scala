@@ -46,6 +46,12 @@ object Configuration {
           PAGE_TIMEOUT_SECS = 10
         )
 
+      case Environment.Demo =>
+        new Configuration(
+          ROOT = "https://beis-ppr-demo.herokuapp.com",
+          PAGE_TIMEOUT_SECS = 10
+        )
+
       case Environment.UR =>
         new Configuration(
           ROOT = "https://beis-ppr-ur.herokuapp.com",
@@ -71,6 +77,8 @@ object Environment extends Enum[Environment] {
   case object Local extends Environment
 
   case object Dev extends Environment
+
+  case object Demo extends Environment
 
   case object UR extends Environment
 

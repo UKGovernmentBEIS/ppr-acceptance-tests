@@ -27,8 +27,10 @@ import pages.report._
 import stepdefs.DocValues
 
 import scala.collection.JavaConversions._
+import scala.util.Try
 
 class ReportSteps extends ScalaDsl with EN with Matchers with StartUpTearDown with DocValues {
+  var fileReportPage: Option[FileReport] = None
 
   val companyMap = Map(
     "The Testing Company" -> "000000001"
@@ -54,8 +56,8 @@ class ReportSteps extends ScalaDsl with EN with Matchers with StartUpTearDown wi
     code.waitForLoad()
     code.clickOn(By.id("submit"))
 
-    val file = new FileReport(companyName, companyId)
-    file.waitForLoad()
+    fileReportPage = Some(new FileReport(companyName, companyId))
+    fileReportPage.value.waitForLoad()
   }
 
   Then("""^the error for (.+) should be '(.+)'$""") { (fieldName: String, errorText: String) =>
@@ -63,26 +65,80 @@ class ReportSteps extends ScalaDsl with EN with Matchers with StartUpTearDown wi
     CurrentPage.IdQuery(errorSpanId).findElement(CurrentPage.webDriver).value.text shouldBe errorText
   }
 
-  Then("""^the js validation should give these errors for the numeric fields:""") { values: DataTable =>
-    val dataRows: List[List[String]] = values.asLists(classOf[String]).toList.map(_.toList)
-    implicit val driver = CurrentPage.webDriver
+  Then("""^the js validation should give these errors for the numeric fields:""") {
+    values: DataTable =>
+      val dataRows: List[List[String]] = values.asLists(classOf[String]).toList.map(_.toList)
+      implicit val driver = CurrentPage.webDriver
 
-    dataRows.foreach { row =>
-      val fieldName = row(0)
-      val value = row(1)
-      val expectedErrorText = row(2)
-      val errorSpanId = s"error-$fieldName"
+      dataRows.foreach {
+        case fieldName :: fieldValue :: expectedErrorText :: Nil =>
+          fileReportPage.value.open()
 
-      CurrentPage.clickOn(By.name(fieldName))
-      CurrentPage.numberField(fieldName).value = value
-      CurrentPage.pressKeys("\t")
-      FixedDelay(20)
+          val errorSpanId = s"error-$fieldName"
 
-      val actualErrorText = CurrentPage.IdQuery(errorSpanId).findElement(CurrentPage.webDriver).value.text.trim
-      withClue(s"$fieldName with value $value") {
-        actualErrorText shouldBe expectedErrorText
+          // There's a flaky issue where sometimes the error doesn't trigger. I think it's because the test is
+          // entering the data in the field and pressing tab before the javascript has run to set up the validations
+          // on the field. This hack of a small delay might mitigate that, but it would be better to have some
+          // positive indication that the js has finished. Maybe by some js that runs after the validation wiring
+          // that sets the content of an invisible element?
+          FixedDelay(100)
+          CurrentPage.clickOn(By.name(fieldName))
+          CurrentPage.numberField(fieldName).value = fieldValue
+          CurrentPage.pressKeys("\t")
+
+          def condition(): Boolean = {
+            CurrentPage.IdQuery(errorSpanId).findElement(CurrentPage.webDriver).map(_.text.trim).contains(expectedErrorText)
+          }
+
+          Try {
+            fileReportPage.value.waitForPageToBeLoaded(condition(), s"Timed out waiting for expected message in $fieldName", 5)
+          }
+
+          withClue(s"$fieldName with value $fieldValue") {
+            val actualErrorText = CurrentPage.IdQuery(errorSpanId).findElement(CurrentPage.webDriver).value.text.trim
+            actualErrorText shouldBe expectedErrorText
+          }
+
+        case row =>
+          fail("Data row is malformed: $row")
       }
+  }
+
+  Then("""^I should see the following errors for the fields:""") { values: DataTable =>
+    val dataRows: List[List[String]] = values.asLists(classOf[String]).toList.map(_.toList)
+    val doc = CurrentPage.doc
+
+    dataRows.foreach {
+      case fieldName :: expectedErrorText :: Nil =>
+        val errorSpanId = s"error-$fieldName"
+
+        withClue(s"Expected error for $fieldName is $expectedErrorText") {
+          val actualErrorText = Option(doc.getElementById(errorSpanId)).value.text.trim
+          actualErrorText shouldBe expectedErrorText
+        }
+
+      case row =>
+        fail("Data row is malformed: $row")
     }
   }
 
+  Then("""^there should be no error for these fields:$""") { values: DataTable =>
+    val dataRows: List[List[String]] = values.asLists(classOf[String]).toList.map(_.toList)
+    val doc = CurrentPage.doc
+
+    dataRows.foreach {
+      case fieldName :: Nil =>
+        val errorSpanId = s"error-$fieldName"
+
+        withClue(s"Expected no error for $fieldName") {
+          val actualErrorText = Option(doc.getElementById(errorSpanId)).value.text.trim
+          actualErrorText shouldBe ""
+        }
+
+
+      case row =>
+        fail("Data row is malformed: $row")
+    }
+
+  }
 }
