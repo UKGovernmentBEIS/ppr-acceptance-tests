@@ -24,23 +24,7 @@ object CompanyTurnoverQuestionY2 extends Page with PageLoading {
 
   override def pageURL: String = "/check-if-you-need-to-report/questions"
 
-  override def titleString: String = "Did your business have a turnover of more than £36 million on its last balance sheet date?"
-}
-
-object CompanyBalanceSheetQuestionY2 extends Page with PageLoading {
-  override def pageName: String = "Company Balance Sheet Question year 2"
-
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
-
-  override def titleString: String = "Did your business have a balance sheet total greater than £18 million on its last balance sheet date?"
-}
-
-object CompanyEmployeeQuestionY2 extends Page with PageLoading {
-  override def pageName: String = "Company Employee Question year 2"
-
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
-
-  override def titleString: String = "Did your business have an average of at least 250 employees during its last financial year?"
+  override def titleString: String = "For your last financial year, did your business have a turnover of more than £36 million on its balance sheet date?"
 }
 
 object CompanyTurnoverQuestionY3 extends Page with PageLoading {
@@ -48,23 +32,7 @@ object CompanyTurnoverQuestionY3 extends Page with PageLoading {
 
   override def pageURL: String = "/check-if-you-need-to-report/questions"
 
-  override def titleString: String = "Did your business have a turnover of more than £36 million on its last 2 balance sheet dates?"
-}
-
-object CompanyBalanceSheetQuestionY3 extends Page with PageLoading {
-  override def pageName: String = "Company Balance Sheet Question year 3"
-
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
-
-  override def titleString: String = "Did your business have a balance sheet total greater than £18 million at its last 2 balance sheet dates?"
-}
-
-object CompanyEmployeeQuestionY3 extends Page with PageLoading {
-  override def pageName: String = "Company Employee Question year 3"
-
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
-
-  override def titleString: String = "Did your business have an average of at least 250 employees during its last 2 financial years?"
+  override def titleString: String = "For the last two financial years, did your business have a turnover of more than £36 million on its balance sheet dates?"
 }
 
 object SubsidiariesQuestion extends Page with PageLoading {

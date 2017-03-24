@@ -24,8 +24,8 @@ object PageTable {
 
   val pages = Seq(Calculator, Answer,
     QuestionnaireStart, CompanyOrLLPQuestion, NoNeedToReport, NeedToReport, FinancialYearQuestion,
-    CompanyTurnoverQuestionY2, CompanyBalanceSheetQuestionY2, CompanyEmployeeQuestionY2,
-    CompanyTurnoverQuestionY3, CompanyBalanceSheetQuestionY3, CompanyEmployeeQuestionY3,
+    CompanyTurnoverQuestionY2,
+    CompanyTurnoverQuestionY3,
     SubsidiariesQuestion)
 
   def lookupPage(pageName: String): Option[Page with PageLoading] = pages.find(_.pageName == pageName)
