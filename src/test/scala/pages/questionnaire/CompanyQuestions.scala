@@ -24,7 +24,7 @@ object CompanyTurnoverQuestionY2 extends Page with PageLoading {
 
   override def pageURL: String = "/check-if-you-need-to-report/questions"
 
-  override def titleString: String = "For your last financial year, did your business have a turnover of more than £36 million on its balance sheet date?"
+  override def titleString: String = "For its last financial year, did your business have a turnover of more than £36 million on its balance sheet date?"
 }
 
 object CompanyTurnoverQuestionY3 extends Page with PageLoading {
@@ -32,7 +32,7 @@ object CompanyTurnoverQuestionY3 extends Page with PageLoading {
 
   override def pageURL: String = "/check-if-you-need-to-report/questions"
 
-  override def titleString: String = "For the last two financial years, did your business have a turnover of more than £36 million on its balance sheet dates?"
+  override def titleString: String = "For the last two financial years, did your business have a turnover of more than £36 million on both of its balance sheet dates?"
 }
 
 object SubsidiariesQuestion extends Page with PageLoading {

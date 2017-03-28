@@ -24,5 +24,5 @@ object FinancialYearQuestion extends Page with PageLoading {
 
   override def pageURL: String = "/check-if-you-need-to-report/questions"
 
-  override def titleString: String = "Which financial year is your business currently in?"
+  override def titleString: String = "Is your business in its first, second or third or later financial year?"
 }
