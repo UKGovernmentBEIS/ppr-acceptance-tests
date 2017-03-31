@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 object FinancialYearQuestion extends Page with PageLoading {
   override def pageName: String = "Financial Year Question"
 
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
+  override def pageURL: String = "/decide/questions"
 
   override def titleString: String = "Is your business in its first, second or third or later financial year?"
 }

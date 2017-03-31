@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 object CompanyTurnoverQuestionY2 extends Page with PageLoading {
   override def pageName: String = "Company Turnover Question year 2"
 
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
+  override def pageURL: String = "/decide/questions"
 
   override def titleString: String = "For its last financial year, did your business have a turnover of more than £36 million on its balance sheet date?"
 }
@@ -30,7 +30,7 @@ object CompanyTurnoverQuestionY2 extends Page with PageLoading {
 object CompanyTurnoverQuestionY3 extends Page with PageLoading {
   override def pageName: String = "Company Turnover Question year 3"
 
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
+  override def pageURL: String = "/decide/questions"
 
   override def titleString: String = "For the last two financial years, did your business have a turnover of more than £36 million on both of its balance sheet dates?"
 }
@@ -38,7 +38,7 @@ object CompanyTurnoverQuestionY3 extends Page with PageLoading {
 object SubsidiariesQuestion extends Page with PageLoading {
   override def pageName: String = "Subsidiaries Question"
 
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
+  override def pageURL: String = "/decide/questions"
 
   override def titleString: String = "Does your business have subsidiaries?"
 }

@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 class ReportStart(companyName: String, companyId: String) extends Page with PageLoading {
   override def pageName: String = "Start reporting"
 
-  override def pageURL: String = s"/report-payment-practices/company/$companyId/start"
+  override def pageURL: String = s"/publish/company/$companyId/start"
 
   override def titleString: String = s"Publish a report for $companyName"
 }
@@ -30,7 +30,7 @@ class ReportStart(companyName: String, companyId: String) extends Page with Page
 class FileReport(companyName: String, companyId: String) extends Page with PageLoading {
   override def pageName: String = "File a report"
 
-  override def pageURL: String = s"/report-payment-practices/company/$companyId/file"
+  override def pageURL: String = s"/publish/company/$companyId/file"
 
   override def titleString: String = s"Publish a report for $companyName"
 }

@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 object NoNeedToReport extends Page with PageLoading {
   override def pageName: String = "No need to report"
 
-  override def pageURL: String = "/check-if-you-need-to-report/exempt"
+  override def pageURL: String = "/decide/exempt"
 
   override def titleString: String = "Your business does not need to publish reports"
 }
@@ -30,7 +30,7 @@ object NoNeedToReport extends Page with PageLoading {
 object NeedToReport extends Page with PageLoading {
   override def pageName: String = "Need to report"
 
-  override def pageURL: String = "/check-if-you-need-to-report/exempt"
+  override def pageURL: String = "/decide/exempt"
 
   override def titleString: String = "Your business must publish reports"
 }

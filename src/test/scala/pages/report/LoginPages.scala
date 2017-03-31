@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 class PreLogin(companyId: String) extends Page with PageLoading {
   override def pageName: String = "Pre-login"
 
-  override def pageURL: String = s"/report-payment-practices/company/$companyId/pre-login"
+  override def pageURL: String = s"/publish/company/$companyId/pre-login"
 
   override def titleString: String = s"Sign in using your Companies House account"
 }
@@ -30,7 +30,7 @@ class PreLogin(companyId: String) extends Page with PageLoading {
 class MockCompaniesHouseLogin(companyId: String) extends Page with PageLoading {
   override def pageName: String = "Mock CoHo Login"
 
-  override def pageURL: String = s"/report-payment-practices/coho/login/$companyId"
+  override def pageURL: String = s"/publish/coho/login/$companyId"
 
   override def titleString: String = s"Sign in to Companies House"
 }
@@ -38,7 +38,7 @@ class MockCompaniesHouseLogin(companyId: String) extends Page with PageLoading {
 class MockCompaniesHouseCode(companyId: String) extends Page with PageLoading {
   override def pageName: String = "Mock CoHo Code"
 
-  override def pageURL: String = s"/report-payment-practices/coho/code/$companyId"
+  override def pageURL: String = s"/publish/coho/code/$companyId"
 
   override def titleString: String = s"Company authentication"
 }

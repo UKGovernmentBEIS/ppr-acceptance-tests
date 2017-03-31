@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 object QuestionnaireStart extends Page with PageLoading {
   override def pageName: String = "Questionnaire Start Page"
 
-  override def pageURL: String = "/check-if-you-need-to-report"
+  override def pageURL: String = "/decide"
 
   override def titleString: String = "Find out if your business needs to publish reports"
 }

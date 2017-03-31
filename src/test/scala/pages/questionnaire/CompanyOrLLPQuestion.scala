@@ -22,7 +22,7 @@ import pages.{Page, PageLoading}
 object CompanyOrLLPQuestion extends Page with PageLoading {
   override def pageName: String = "Company or LLP Question"
 
-  override def pageURL: String = "/check-if-you-need-to-report/questions"
+  override def pageURL: String = "/decide/questions"
 
   override def titleString: String = "Is your business a company incorporated in the UK or a limited liability partnership registered in the UK?"
 }
