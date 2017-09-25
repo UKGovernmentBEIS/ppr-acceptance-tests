@@ -1,3 +1,5 @@
+# DEPRECATED - these tests have been incorporated into https://github.com/UKGovernmentBEIS/payment-practices-reporting as integration tests and are no longer maintained
+
 # Acceptance tests for Payment Practices Reporting service
 
 The ppr project is here https://github.com/UKGovernmentBEIS/payment-practices-reporting
